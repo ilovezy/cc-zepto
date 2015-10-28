@@ -2,11 +2,12 @@
  * @Author: fhc
  * @Date:   2015-10-28 13:27:14
  * @Last Modified by:   fhc
- * @Last Modified time: 2015-10-28 15:16:45
+ * @Last Modified time: 2015-10-28 15:37:03
  */
 
 'use strict';
 
+// 定义 Zepto的构造函数
 var Zepto = (function() {
 
     var undefined, key, $, classList, emptyArray = [],
@@ -88,16 +89,54 @@ var Zepto = (function() {
 window.Zepto = Zepto;
 window.$ === undefined && (window.$ = Zepto);
 
+// DOM 操作和事件等
+
+(function($) {
+
+
+
+    // shortcut methods for '.bind(event, fn)' for each event type
+    // 各种鼠标键盘DOM事件，怎么都喜欢字符串 split 为数组，可能是比较容易阅读吧
+    ('focusin focusout focus blur load resize scroll unload click dblclick ' + 'mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave' + 'change select keydown keypress keyup error').split(' ').forEach(function(event) {
+        $.fn[event] = function(callback) {
+            return (0 in arguments) ?
+                this.bind(event, callback) :
+                this.trigger(event)
+        }
+    })
+
+    $.Event = function(type, props) {
+        if (!isString(type)) {
+            props = type;
+            type = props.type
+        }
+
+        var event = document.createEvent(specialEvents[type] || 'Events'),
+            bubbles = true;
+
+        if (props) {
+            for (var name in props) {
+                name == 'bubbles' ?
+                    // 这种写法把字符串形式的 boolean改成 boolean 形式
+                    (bubbles = !!props[name]) :
+                    (event[name] = props[name])
+            }
+        }
+
+        event.initEvent(type, bubbles, true)
+        return compatible(event)
+    }
+})(Zepto);
+
+
+// ajax 这一大块
 
 (function($) {
 
 })(Zepto);
 
 
-(function($) {
-
-})(Zepto);
-
+// 表单序列化
 
 (function($) {
     // 使用方法 $("form").serializeArray()...
