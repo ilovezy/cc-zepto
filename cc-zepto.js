@@ -2,7 +2,7 @@
  * @Author: fhc
  * @Date:   2015-10-28 13:27:14
  * @Last Modified by:   fhc
- * @Last Modified time: 2015-10-28 15:37:03
+ * @Last Modified time: 2015-10-28 16:02:32
  */
 
 'use strict';
@@ -132,6 +132,29 @@ window.$ === undefined && (window.$ = Zepto);
 // ajax 这一大块
 
 (function($) {
+    var jsonpID = 0,
+        document = window.document,
+        key,
+        name,
+        // \b 匹配单词开始或结束，\s 匹配空白符， \d 匹配数字
+        rscript = //gi,
+        scriptTypeRE = /^(?:text|application)\/xml/i,
+        xmlTypeRE = /^(?:text|application)\/xml/i,
+        jsonType = 'application/json',
+        htmlType = 'text/html',
+
+        /* 从开头到结尾匹配空白符，重复0次或者多次
+
+         ^ 开头
+         $ 结尾
+         \s 空白符
+         * 匹配0次或多次
+
+        */
+        blankRE = /^\s*$/;
+
+    var originAnchor = document.createElement('a');
+    originAnchor.href = window.location.href;
 
 })(Zepto);
 
