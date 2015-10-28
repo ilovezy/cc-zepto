@@ -2,7 +2,7 @@
  * @Author: fhc
  * @Date:   2015-10-28 13:27:14
  * @Last Modified by:   fhc
- * @Last Modified time: 2015-10-28 14:51:33
+ * @Last Modified time: 2015-10-28 15:16:45
  */
 
 'use strict';
@@ -24,8 +24,65 @@ var Zepto = (function() {
             'z-index': 1,
             'zoom': 1
         },
-        fragmentRE = /^\s*<(\w+|!)[^>]*>/,
+        fragmentRE = /^\s*<(\w+|!)[^>]*>/;
+    // ...
 
+    // 以上是一堆常用的变量或者常量
+
+    zepto.matches = function(element, selector) {
+
+    }
+
+    // 一下是常用的判断函数
+
+    // 判断对象的类型，是null就返回字符串 null，不是就用 class2type这个方法去判断
+    function type(obj) {
+        return obj == null ? String(obj) : class2type[toString.call(obj)] || 'object'
+    }
+
+    // 这几个都差不多，调用了最基本的 type 方法
+    function isFunction(value) {
+        return type(value) == 'function'
+    }
+
+    function isWindow(obj) {
+        return obj != null && obj == obj.window
+    }
+
+    function isDocument(obj) {
+        return obj != null && obj.nodeType == obj.DOCUMENT_NODE
+    }
+
+    function isObject(obj) {
+        return type(obj) == 'object'
+    }
+
+    /*
+     判断是否为空的对象，即对象下面没有任何东西, 且该对象不从任何对象中 new 得来，说白了就是 var a = {} 类似这样的对象
+    */
+    function isPlainObj(obj) {
+        return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype
+    }
+
+    // 这里判断有的简单了吧
+    function likeArray(obj) {
+        return typeof obj.length == 'number'
+    }
+
+    function compact(array) {
+        return filter.call(array, function(item) {
+            return item != null
+        })
+    }
+
+    // 这里有个 parseJSON 的，就比较简单了, 把字符串转成 json
+    if (window.JSON) {
+        $.parseJSON = JSON.parse
+    }
+
+
+    // 加工完了就返回 $，配合下面两句写法
+    return $;
 });
 
 window.Zepto = Zepto;
@@ -103,7 +160,7 @@ window.$ === undefined && (window.$ = Zepto);
 (function($) {
     if (!('__proto__' in {})) {
         $.extend($.zepto, {
-            Z: function(don, selector) {
+            Z: function(dom, selector) {
                 dom = dom || []
                 $.extend(dom, $.fn)
                 dom.selector = selector || ''
