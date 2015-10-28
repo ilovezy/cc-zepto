@@ -2,7 +2,7 @@
  * @Author: fhc
  * @Date:   2015-10-28 13:27:14
  * @Last Modified by:   fhc
- * @Last Modified time: 2015-10-28 16:02:32
+ * @Last Modified time: 2015-10-28 16:23:16
  */
 
 'use strict';
@@ -155,6 +155,42 @@ window.$ === undefined && (window.$ = Zepto);
 
     var originAnchor = document.createElement('a');
     originAnchor.href = window.location.href;
+
+
+    // handle optional data/success arguments
+    // 在使用简写的 ajax时把参数转换一下？？
+    function parseArguments(url, data, success, dataType) {
+        // 这段奇葩
+        if ($.isFunction(data)) {
+            dataType = success;
+            success = data;
+            data = undefined;
+        }
+
+        if (!$.isFunction(success)) {
+            dataType = success;
+            success = undefined;
+            return {
+                url: url,
+                data: data,
+                success: success,
+                dataType: dataType
+            }
+        }
+    }
+
+    // 这边的 ajax 简写，本质上都是调用了 $.ajax 而已
+
+    // get 说明了$.ajax 默认的 type 就是 'GET'
+    $.get = function( /*url, data, success, dataType*/ ) {
+        return $.ajax(parseArguments.apply(null, arguments))
+    }
+
+    $.post = function() {
+        var options = parseArguments.apply(null, arguments)
+        options.type = 'POST'
+        return $.ajax(options)
+    }
 
 })(Zepto);
 
